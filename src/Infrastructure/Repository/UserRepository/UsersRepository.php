@@ -8,7 +8,7 @@ use PDOException;
 class UsersRepository {
     protected $pdo;
     public function __construct() {
-        $dsn = 'pgsql:host=localhost;dbname=homestead;port=5432';
+        $dsn = 'pgsql:host=postgres;dbname=homestead;port=5432';
         $username = 'root';
         $password = 'secret';
         try {
@@ -34,5 +34,6 @@ class UsersRepository {
         $objects = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $objects;
     }
+
 }
 ?>

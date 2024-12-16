@@ -1,12 +1,19 @@
 version: '3.7'
 
+networks:
+  slim-net:
+    name: slim
+    driver: bridge
+
 volumes:
     logs:
         driver: local
 
 services:
     slim:
-        image: php:8.3-alpine
+        build:
+            context: .
+            dockerfile: dockerfile
         working_dir: /var/www
         command: php -S 0.0.0.0:8080 -t public
         environment:
@@ -16,7 +23,9 @@ services:
         volumes:
             - .:/var/www
             - logs:/var/www/logs
-
+        networks:
+            - slim-net
+    
     postgres:
         image: postgres:13.3
         restart: always
@@ -26,6 +35,8 @@ services:
             POSTGRES_PASSWORD: "secret"
         ports:
             - "5432:5432"
+        networks:
+            - slim-net
 
     pgadmin:
         container_name: pgadmin_container
@@ -37,6 +48,8 @@ services:
         ports:
             - "5050:80"
         restart: unless-stopped
+        networks:
+            - slim-net
         deploy:
             resources:
                 limits:
